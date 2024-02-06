@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<article><h2 >Inventario de Equipos</h2>
+    <form class="crud-form">
+      
+    <!-- <input type="text" name="tipoid" id="tipoid" placeholder="tipo Id"> -->
+    <label for="estado" id ="lblestado">Estado actual: </label><br>
+ 
+    
+  <select  class = "select" id="estado" data-disponible=""
+    oninvalid="this.set.setCustomValidity('seleccione un estado')">
+    <option disabled selected value> -- seleccione un estado -- </option>
+    </select><br>
+    <!-- <label for="estado" ></label>
+    <input type="checkbox" name="diponible" id="disponible" class="disponible" disabled="true"> -->
+    
+    <br>
+        <label for="descripcion">Descripcion: </label><br>
+        <input type="text" name="descripcion" id="descripcion" placeholder="Descripcion">
+        <br><br>
+     
+        <label for="marca">Marca: </label><br>
+        <input type="text" name="marca" id="marca" placeholder="Marca"> 
+        <br><br>
+        <label for="serial">Serial: </label><br>
+        <input type="text" name="serial" id="serial" placeholder="Serial"> 
+        <br><br>
+          
+     <label for="disponible">Almacenamiento actual:</label> <br>
+    <select  class = "select-ubicacion" id="ubicacion" >
+            <option disabled selected value> -- seleccione ubicacion -- </option>
+        </select> 
+             <br><br>
+        <input type="submit" value="enviar">
+        <input type="hidden" name="id" value="">    
+        
+        <input type="button" value="view" class="view">
+</form>
+</article>
+<article>
+   <h2> Equipos</h2> 
+<table class="crud-table">
+   <thead>
+    <th ><input type="checkbox" name="seleccion" id="seleccion"></th>
+   
+   <th>Descripcion</th>
+   <th>Marca</th>
+   <th>Serial</th>
+   <th>Estado</th>
+   <th>Ubicacion</th>
+   <th>Operaciones</th>
+   <tbody class="tbody">
+   </tbody>
+</thead>
+
+</table>
+
+</article>
+<template class="crud-template">
+    <tr class="tableRow">
+        <td> <input class="seleccion" type="checkbox" ></td>
+        <td class="descripcion"></td>
+        <td class="marca"></td>
+        <td class="serial"></td>
+        <td class="estado"></td>
+        <td class="ubicacion"></td>
+        <td><button class="edit" data-id=""  
+                                 data-descripcion="" 
+                                 data-marca="" 
+                                 data-serial="" 
+                                 data-estado=""
+                                 data-ubicacion=""
+                                 value ="Editar">Editar</button>
+<button class="delete" data-id="" value ="Borrar">Borrar</button>
+</td>
+    </tr>
+</template>
+
+<template class="option-template">
+    <!-- <option value="" disabled selected hidden>Choose a drink</option> -->
+    <option class="option" disabled selected hidden>Ninguno</option>
+</template>
+
+<script>
+    const d = document;
+    const $table = d.querySelector(".crud-table");
+    const $form = d.querySelector(".crud-form");
+    const $select = d.querySelector(".select");
+    const $selectUbicacion= d.querySelector(".select-ubicacion");
+    const $template = d.querySelector(".crud-template").content;
+    const $fragment = d.createDocumentFragment();
+    const $template1 = d.querySelector(".option-template").content;
+    //const $fragment1 = d.createDocumentFragment();
+    const $tableRow = d.querySelector(".tableRow");
+    const filaActual=0;
+    //const $optionx
+    const ajax = (options) =>
+{
+    let {url,method,success,error,data} = options;
+    
+    const xhr= new XMLHttpRequest();
+    xhr.addEventListener("readystatechange",e=>{
+        if (xhr.readyState !== 4) return;
+          if (xhr.status >=200 && xhr.status <300)
+          {
+            let json = JSON.parse(xhr.responseText);
+            console.log(json);
+            success(json);
+          }
+          else{
+            let message = xhr.statusText || "ocurrio un error";
+            error(`Error ${xhr.status}:${message}`);
+          }
+        });
+    xhr.open(method||"GET",url);
+    xhr.setRequestHeader("Content-type","application/json;charset=utf-8");   
+    xhr.send(JSON.stringify(data));
+
+
+}
+
+const getUbicacion=() =>
+{
+    ajax({
+   
+    url:"http://localhost:5555/bodegas",
+    success: (res) =>{let $clone
+        option = d.createElement("option");
+        option.value = "option disabled selected value";
+        option.text = "-- seleccione ubicacion -- ";
+        $clone= d.importNode(option,true);
+        //$fragment.appendChild($clone);
+        res.forEach(el => {
+        newOption = d.createElement("option");
+        newOption.value = el.id;
+        newOption.text = el.descripcion;
+        $clone= d.importNode(newOption,true);
+    $fragment.appendChild($clone);
+    });
+    $select-ubicacion.appendChild($fragment);
+    },
+    error: (err) => 
+    {
+        $table.insertAdjacentHTML("afterend",`<p>${err}</p>`)
+        console.log(err)},
+    data: null
+    })
+
+}
+
+const getEstado=() =>
+{
+    ajax({
+   
+    url:"http://localhost:5555/estadoEquipo",
+    success: (res) =>{console.log(res)
+      
+        res.forEach(el => {
+        //newOption = `<option data-disponible=""></p>`
+        newOption = d.createElement("option");
+        newOption.value = el.id;
+        newOption.label = el.descripcion;
+        newOption.text = el.disponible;
+        //newOption.text = el.descripcion;
+        newOption.disponible=el.disponible;
+        console.log(newOption.disponible);
+        let $clone= d.importNode(newOption,true);
+    $fragment.appendChild($clone);
+    });
+    $select.appendChild($fragment);
+    },
+    error: (err) => 
+    {
+        $table.insertAdjacentHTML("afterend",`<p>${err}</p>`)
+        console.log(err)},
+    data: null
+    })
+
+}
+
+const getAllEquipo=() =>
+{   //getUbicacion();
+    getEstado();
+    getUbicacion();
+    //$selectUbicacion.disabled= true;
+    console.log("getAll");
+    ajax({
+   
+    url:"http://localhost:5555/equipos",
+    success: (res) =>{console.log(res)
+    res.forEach(el => {
+        $template.querySelector(".descripcion").textContent=el.descripcion;
+        $template.querySelector(".marca").textContent=el.marca;
+        $template.querySelector(".serial").textContent=el.numserial;
+        $template.querySelector(".estado").textContent=el.estado.descripcion;
+        $template.querySelector(".ubicacion").textContent=el.ubicacion.descripcion;
+        $template.querySelector(".edit").dataset.id=el.id;
+        $template.querySelector(".edit").dataset.descripcion=el.descripcion;
+        $template.querySelector(".edit").dataset.marca=el.marca;
+        $template.querySelector(".edit").dataset.serial=el.numserial;
+        $template.querySelector(".edit").dataset.estado=el.estado.id;
+        $template.querySelector(".edit").dataset.ubicacion=el.ubicacion.id;
+        $template.querySelector(".delete").dataset.id=el.id;
+        let $clone= d.importNode($template,true);
+        $fragment.appendChild($clone);
+    });
+    $table.querySelector(".tbody").appendChild($fragment);
+    },
+    error: (err) => 
+    {
+        $table.insertAdjacentHTML("afterend",`<p>${err}</p>`)
+        console.log(err)},
+    data: null
+    })
+
+}
+
+
+function removeOptions(selectElement) {
+   var i, L = selectElement.options.length - 1;
+   for(i = L; i >= 0; i--) {
+      selectElement.remove(i);
+   }
+}
+
+function Booleano (valor)
+{
+    let boolString = valor; 
+    let boolValue = (boolString.toLowerCase() === "true"); 
+    return boolValue;
+}
+
+d.addEventListener("change",e =>
+{  if (e.target.matches(".select"))
+   {
+  
+    let boolString = e.target.options[e.target.selectedIndex].text;   
+    let boolValue = (boolString.toLowerCase() === "true"); 
+    //d.getElementById("disponible").checked = boolValue;
+    if (boolValue)
+    d.getElementById("lblestado").textContent="Estado actual (D)";
+    else
+    d.getElementById("lblestado").textContent="Estado actual (ND)";
+}
+    
+    /*  if (e.target.matches(".disponible"))
+   {
+    
+    if (d.getElementById("disponible").checked)
+    {
+        getUbicacion();
+    $selectUbicacion.disabled=false;
+    }
+    else
+    {
+        removeOptions($selectUbicacion);
+        option = d.createElement("option");
+        option.value = "option disabled selected value";
+        option.text = "-- seleccione ubicacion -- ";
+        $selectUbicacion.appendChild(option);
+        $selectUbicacion.disabled= true;
+    }
+} */
+ 
+}) 
+
+d.addEventListener("DomContentLoaded",getAllEquipo());
+
+d.addEventListener("mousemove",e =>
+{
+    if (e.target.matches(".tableRow"))
+   {
+    filaActual = $table.rowIndex;
+    console.log(filaActual);
+}  
+})
+
+d.addEventListener("submit",e =>{
+    if (e.target===$form)
+    e.preventDefault();
+    if (!e.target.id.value)
+    {
+        ajax(
+            {
+                method:"POST",
+                url:"http://localhost:5555/equipos",
+                success: (res) =>location.reload,
+                error: () =>$form.insertAdjacentHTML("afterend",`<p>${err}</p>`),
+                data: { descripcion:e.target.descripcion.value,
+                        marca:e.target.marca.value,
+                        numserial:e.target.serial.value,
+                        estado:{id:Number($select.options[$select.selectedIndex].value),
+                                descripcion:$select.options[$select.selectedIndex].label},
+                        ubicacion:{id:Number($selectUbicacion.options[$selectUbicacion.selectedIndex].value),
+                                    descripcion:$selectUbicacion.options[$selectUbicacion.selectedIndex].text}
+                        }
+             });
+     }
+    else
+    {
+     // PUT
+      
+     ajax(
+            {
+                method:"PUT",
+                url:`http://localhost:5555/equipos/${e.target.id.value}`,
+                success: (res) =>location.reload,
+                error: () =>$form.insertAdjacentHTML("afterend",`<p>${err}</p>`),
+                data: { descripcion:e.target.descripcion.value,
+                        marca:e.target.marca.value,
+                        numserial:e.target.serial.value,
+                        estado:{id:Number($select.options[$select.selectedIndex].value),
+                                descripcion:$select.options[$select.selectedIndex].label},
+                        ubicacion:{id:Number($selectUbicacion.options[$selectUbicacion.selectedIndex].value),
+                                    descripcion:$selectUbicacion.options[$selectUbicacion.selectedIndex].text}
+                        }
+             });
+    }
+    
+}
+) 
+
+d.addEventListener("click",e =>
+{
+    if (e.target.matches(".view") )
+   {
+    
+}
+    if (e.target.matches(".edit") )
+   {
+    $form.id.value=e.target.dataset.id;
+    $form.descripcion.value=e.target.dataset.descripcion;
+    $form.marca.value=e.target.dataset.marca;
+    $form.serial.value=e.target.dataset.serial;
+    $form.estado.value=e.target.dataset.estado;
+    $form.ubicacion.value=e.target.dataset.ubicacion;
+   }
+   
+   if (e.target.matches(".delete") )
+   {
+   let isDelete = confirm(`Desea eliminar el usuario con No. id dado ?`);
+   if (isDelete)
+
+   {
+    ajax(
+            {
+                method:"DELETE",
+                url:`http://localhost:5555/equipos/${e.target.dataset.id}`,
+                success: (res) =>location.reload,
+                error: () =>$form.insertAdjacentHTML("afterend",`<p>${err}</p>`),
+                
+             });
+   }
+
+    }
+}
+)
+
+
+
+</script>
+</body>
+</html>

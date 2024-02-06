@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    .form-row {
+        display: flex;
+        justify-content: space-between; /* this will add equal space between each image */
+      }
+</style>
+</head>
+<body>
+    <article><h2 >Agregar Prestamos</h2>
+  
+    <form class="form_prestamo">
+       
+        <input type="submit" value="grabar prestamo" class="send">
+       <br>
+       <br>
+        <div>
+        <label for="txtfecha">Fecha prestamo: </label><br>
+        <input type="date" id="txtfecha"  size="10" required
+        >
+        
+        <br>
+    </div>
+    <br>   
+    <h2 >Quien solicita: </h2>
+    <div class="form-row">
+        <div>
+            <label for="nombre">Nombre completo: </label><br>
+        <select  class = "selectNombre" id="nombre"  required 
+        oninvalid="this.set.setCustomValidity('seleccione el nombre del responsable')">
+    
+            <option disabled selected value> -- select un Responsable -- </option>
+        </select>
+      </div>
+        <div>
+        <label for="tipoid">Tipo Identificacion: </label><br>
+        <input type="text" name="tipoid" id="tipoid" class="tipoid" readonly="true" data-id="" placeholder="Tipo Id">
+    </div>
+          <div>
+            <label for="numid">No id: </label><br>
+            <input type="text" name="numid" id="numid"  class="numid"  readonly="true" placeholder="No. Id">
+        </div>
+        </div>
+            <input type="hidden" name="id" value="" class="id">    
+        <!-- <h2 >Ubicacion equipo</h2> -->
+        <br>
+        <!-- <div>
+        <label for="ubicacion">Bodegas Existentes: </label><br>
+        <select  class = "selectUbicacion" id="ubicacion" requerid
+                oninvalid="this.set.setCustomValidity('seleccione la ubicacion del equipo')" >
+                <option disabled selected value> -- seleccion una ubicacion -- </option>
+        </select>  
+    </div>
+       <br>
+      
+         <input type="hidden" name="id" value="">    
+     </form> -->
+
+<!-- <button class="update">update</button> -->
+</article>
+<article>
+   <h2> Equipos disponibles</h2> 
+   <div>
+    <label for="ubicacion">Bodegas Existentes: </label><br>
+    <select  class = "selectUbicacion" id="ubicacion" requerid
+            oninvalid="this.set.setCustomValidity('seleccione la ubicacion del equipo')" >
+            <option disabled selected value> -- seleccion una ubicacion -- </option>
+    </select>  
+</div>
+   <br>
+  
+     <input type="hidden" name="id" value="">    
+ </form>
+
+   <table class="crud-table">
+   <thead>
+    <th ><input type="checkbox" name="seleccion" id="seleccion"></th>
+   
+   <th>descripcion</th>
+   <th>Marca</th>
+   <th>Serial</th>
+   <th>Estado</th>
+   <th>Ubicacion</th>
+   <th>Operaciones</th>
+   <tbody class="tbody">
+   </tbody>
+</thead>
+
+</table>
+
+</article>
+
+<template class="crud-template">
+    <tr class="tableRow">
+        <td> <input class="seleccion" type="checkbox" ></td>
+        <td class="descripcion"></td>
+        <td class="marca"></td>
+        <td class="serial"></td>
+        <td class="estado"></td>
+        <td class="ubicacion"></td>
+         <td>
+            <button class="delete" data-id="" value ="Borrar">Borrar</button>
+        </td>
+    </tr>
+</template>
+
+<template class="option-template">
+    <!-- <option value="" disabled selected hidden>Choose a drink</option> -->
+    <option class="option" disabled selected hidden>Ninguno</option>
+</template>
+
+<script>
+    const d = document;
+    const $table = d.querySelector(".crud-table");
+    const $fecdevolucion = d.getElementById("txtfecha");
+    const $formPrestamo = d.querySelector(".form_prestamo");
+    const $selectNombre = d.querySelector(".selectNombre");
+    const $selectUbicacion = d.querySelector(".selectUbicacion");
+    const $template = d.querySelector(".crud-template").content;
+    const $fragment = d.createDocumentFragment();
+    const $template1 = d.querySelector(".option-template").content;
+    const $tableRow = d.querySelector(".tableRow");
+    const currentDate = new Date();
+    const filaActual=0;
+    let numfilas =0;
+    //const $optionx
+    const ajax = (options) =>
+{
+    let {url,method,success,error,data} = options;
+    
+    const xhr= new XMLHttpRequest();
+    xhr.addEventListener("readystatechange",e=>{
+        if (xhr.readyState !== 4) return;
+          if (xhr.status >=200 && xhr.status <300)
+          {
+            let json = JSON.parse(xhr.responseText);
+            //console.log(json);
+            success(json);
+          }
+          else{
+            let message = xhr.statusText || "ocurrio un error";
+            error(`Error ${xhr.status}:${message}`);
+          }
+        });
+    xhr.open(method||"GET",url);
+    xhr.setRequestHeader("Content-type","application/json;charset=utf-8");   
+    xhr.send(JSON.stringify(data));
+
+
+}
+
+function currentdate()
+{
+    let d,m,y;
+    if (currentDate.getDate() < 10)
+        d = "0"+currentDate.getDate();
+    else
+        d = currentDate.getDate()+"";
+    
+    if (currentDate.getMonth() < 10)
+        m = "0"+(currentDate.getMonth()+1);
+    else
+        m = (currentDate.getMonth()+1)+"";
+    
+    return currentDate.getFullYear()+"-"+m+"-"+d; 
+  }
+
+const getUsers=() =>
+{
+    ajax({
+    url:"http://localhost:5555/users",
+    success: (res) =>{console.log(res)
+        res.forEach(el => {
+        newOption = d.createElement("option");
+        newOption.value = el.id;
+        newOption.text = el.nombre;
+        let $clone= d.importNode(newOption,true);
+    $fragment.appendChild($clone);
+    });
+    
+    $selectNombre.appendChild($fragment);
+    },
+    error: (err) => 
+    {
+        $table.insertAdjacentHTML("afterend",`<p>${err}</p>`)
+        console.log(err)},
+    data: null
+    })
+//$selectNombre.dispatchEvent(onchange);
+
+//event.initCustomEvent('onchange');
+//d.dispatchEvent(onchange);
+/* if (event && event.onchange) {
+    var oe = event.onchange;
+    $selectNombre.dispatchEvent(new oe.constructor(oe.type, oe));
+} */
+}
+
+const getEquipos=() =>
+{
+    ajax({
+   
+    url:"http://localhost:5555/equipos",
+    success: (res) =>{console.log(res)
+      
+        res.forEach(el => {
+        newOption = d.createElement("option");
+        newOption.value = el.id;
+        newOption.text = el.descripcion;
+     let $clone= d.importNode(newOption,true);
+    $fragment.appendChild($clone);
+    });
+    $selectDescripcion.appendChild($fragment);
+    },
+    error: (err) => 
+    {
+        $table.insertAdjacentHTML("afterend",`<p>${err}</p>`)
+        console.log(err)},
+    data: null
+    })
+
+}
+
+const getUbicacion=() =>
+{
+    ajax({
+   
+    url:"http://localhost:5555/bodegas",
+    success: (res) =>{console.log(res)
+      
+        res.forEach(el => {
+        newOption = d.createElement("option");
+        newOption.value = el.id;
+        newOption.text = el.descripcion;
+     let $clone= d.importNode(newOption,true);
+    $fragment.appendChild($clone);
+    });
+    $selectUbicacion.appendChild($fragment);
+    },
+    error: (err) => 
+    {
+        $table.insertAdjacentHTML("afterend",`<p>${err}</p>`)
+        console.log(err)},
+    data: null
+    })
+
+}
+
+const getAllData=() =>
+{   getUsers();
+    getUbicacion();
+    $fecdevolucion.value = currentdate();
+}
+
+
+d.addEventListener("DomContentLoaded",getAllData());
+
+d.addEventListener("mousemove",e =>
+{
+    if (e.target.matches(".tableRow"))
+   {
+    filaActual = $table.rowIndex;
+    console.log(filaActual);
+}  
+})
+
+function filltable(idResponsable)
+{
+    //alert("numfilas"+numfilas);
+    if(numfilas > 1)
+    {
+        var cells = document.querySelectorAll('td');
+        var i = 0;
+        while($table.rows.length > 1)
+        {
+        //console.log("filas "+$table.rows.length);
+        $table.deleteRow(0);
+        //i++;
+        }
+    }
+    ajax(
+            {
+                method:"GET",
+                url:`http://localhost:5555/prestamo?responsable.id=${idResponsable}`,
+                success: (res) =>
+                {
+                res.forEach(el => 
+                {
+                $template.querySelector(".descripcion").textContent=el.equipo.descripcion;
+                $template.querySelector(".marca").textContent=el.equipo.marca;
+                $template.querySelector(".serial").textContent=el.equipo.numserial;
+                $template.querySelector(".estado").textContent=el.equipo.estado.descripcion;
+                $template.querySelector(".ubicacion").textContent=el.equipo.ubicacion.descripcion;
+                $clone= d.importNode($template,true);
+                $fragment.appendChild($clone);
+                numfilas=numfilas+1;     
+                });
+                $table.querySelector(".tbody").appendChild($fragment);         
+                
+            },
+                error: () =>$formPrestamo.insertAdjacentHTML("afterend",`<p>error}</p>`),
+                data: null
+                            });
+    
+    
+    
+  
+    }
+       
+function insertElement()
+   {
+    ajax(
+            {
+                method:"POST",
+                url:"http://localhost:5555/prestamo",
+                success: (res) =>{alert("insercion ok");
+            },
+                error: () =>$formPrestamo.insertAdjacentHTML("afterend",`<p>error}</p>`),
+                data: { 
+                    fecprestamo:d.getElementById("txtfecha").value,
+                    fecdevolucion:"",
+                    responsable: {
+                                tipoid: {id: Number($formPrestamo.querySelector(".tipoid").dataset.id),
+                                         title:  $formPrestamo.querySelector(".tipoid").value
+                                         },          
+                                 numid: $formPrestamo.querySelector(".numid").value,
+                                 nombre: $selectNombre.options[$selectNombre.selectedIndex].text,
+                                    id: Number($selectNombre.options[$selectNombre.selectedIndex].value)
+                                        },
+                    equipo:{id:Number($selectDescripcion.options[$selectDescripcion.selectedIndex].value),
+                                descripcion:$selectDescripcion.options[$selectDescripcion.selectedIndex].text,
+                                marca:$formPrestamo.querySelector(".marca").value,
+                                numserial:$formPrestamo.querySelector(".serial").value,
+                                estado:{id:Number($formPrestamo.querySelector(".estado").dataset.id),
+                                        descripcion:$formPrestamo.querySelector(".estado").value},
+                                ubicacion:{id:Number($formPrestamo.querySelector(".ubicacion").dataset.id),
+                                           descripcion:$formPrestamo.querySelector(".ubicacion").value}
+                                    }
+                                
+                                }
+                            });
+   }
+
+  /*
+        http://localhost:3000/customer?age=22
+        http://localhost:3000/customer?name_like=rist
+        */
+
+
+        d.addEventListener("submit",e =>{
+    if (e.target===$formPrestamo)
+    e.preventDefault();
+    if (!e.target.id.value)
+    {   insertElement();
+        alert(e.target.id.value)
+        //filltable();
+    }
+    else
+    {
+     // PUT
+ ajax(
+            {
+                method:"PUT",
+                url:`http://localhost:5555/prestamo/${e.target.id.value}`,
+                success: (res) =>alert("actualizado"),
+                error: () =>$form.insertAdjacentHTML("afterend",`<p>${err}</p>`),
+                data: { fecprestamo: $fecdevolucion.value,
+                        fecdevolucion: "12/01/2024",
+                        responsable: {
+                                      tipoid: {
+                                                id: $selectNombre.value,
+                                                title: $selectNombre.text
+                                                },
+                                       numid: $formPrestamo.querySelector(".numid"),
+                                       nombre: $formPrestamo.querySelector(".id"),
+                                        id: 1
+                                     },
+                        equipo:{
+                        descripcion:e.target.descripcion.value,
+                        marca:e.target.marca.value,
+                        numserial:e.target.serial.value,
+                        estado:{id:Number($select.options[$select.selectedIndex].value),
+                                descripcion:$select.options[$select.selectedIndex].text},
+                        ubicacion:{id:Number($selectUbicacion.options[$selectUbicacion.selectedIndex].value),
+                                   descripcion:$selectUbicacion.options[$selectUbicacion.selectedIndex].text}
+                                }
+                                }
+             });
+    }
+    
+}
+) 
+
+/*
+{
+      "fecprestamo": "12/01/2024",
+      "fecdevolucion": "12/01/2024",
+      "id": 1,
+      "responsable": {
+        "tipoid": {
+          "id": 1,
+          "title": "CEDULA DE CIUDADANIA"
+        },
+        "numid": "1247",
+        "nombre": "juan",
+        "id": 1
+      },
+      "equipo": {
+        "descripcion": "teodolito",
+        "marca": "toplink",
+        "numserial": "ABCD123",
+        "ubicacion": {
+          "id": 3,
+          "descripcion": "centro",
+          "direccion": "cr 22c 4 sur 58"
+        },
+        "estado": {
+          "id": 1,
+          "descripcion": "ACTIVOS"
+        },
+        "fecCalibracion": "12/01/024",
+        "id": 1
+      }
+    }
+*/
+
+d.addEventListener("click",e =>
+{
+    if (e.target.matches(".update") )
+   {
+    //insertElement();
+    //    filltable();    
+    //alert($formPrestamo.querySelector(".id").value);
+    filltable($formPrestamo.querySelector(".id").value);
+   }
+   else
+   if (e.target.matches(".delete") )
+   {
+   let isDelete = confirm(`Desea eliminar el usuario con No. id dado ?`);
+   if (isDelete)
+   {
+    ajax(
+            {
+                method:"DELETE",
+                url:`http://localhost:5555/prestamo/${e.target.dataset.id}`,
+                success: (res) =>alert("Actualizacion Exitosa"),
+                error: () =>$form.insertAdjacentHTML("afterend",`<p>${err}</p>`),
+             });
+   }
+    }
+}
+)
+d.addEventListener("change",e =>
+{
+  if (e.target.matches(".selectNombre") )
+   {
+  ajax(
+            {
+                //http://localhost:5555/equipos?ubicacion.id=2
+                method:"GET",
+                url:`http://localhost:5555/users/${e.target.value}`,
+                success: (res) =>{ 
+                                  $formPrestamo.querySelector(".tipoid").value=res.tipoid.title;
+                                  $formPrestamo.querySelector(".tipoid").dataset.id=res.tipoid.id;
+                                  $formPrestamo.querySelector(".numid").value=res.numid;
+                                  $formPrestamo.querySelector(".id").value=res.id;
+                                },
+                error: () =>$formPrestamo.insertAdjacentHTML("afterend",`<p>${err}</p>`),
+                data: null
+             });
+             
+            }
+else
+if (e.target.matches(".selectUbicacion") )
+   {
+    
+    if(numfilas > 0)
+    {
+        
+        var i = 0;
+        
+        while(numfilas > 0)
+        {
+        //alert("filas "+$table.rows.length);
+        $table.deleteRow(numfilas);
+        numfilas--;
+        }
+    }
+  
+   ajax(
+            {
+ 
+                method:"GET",
+                url:`http://localhost:5555/equipos?ubicacion.id=${e.target.value}`,
+                success: (res) =>
+                {
+                res.forEach(el => 
+                {
+                $template.querySelector(".descripcion").textContent=el.descripcion;
+                $template.querySelector(".marca").textContent=el.marca;
+                $template.querySelector(".serial").textContent=el.numserial;
+                $template.querySelector(".estado").textContent=el.estado.descripcion;
+                $template.querySelector(".ubicacion").textContent=el.ubicacion.descripcion;
+                $clone= d.importNode($template,true);
+                $fragment.appendChild($clone);
+                numfilas=numfilas+1;     
+                });
+                $table.querySelector(".tbody").appendChild($fragment);         
+                
+            },
+              error: () =>$formPrestamo.insertAdjacentHTML("afterend",`<p>${err}</p>`),
+                data: null
+             });
+}
+})
+</script>
+</body>
+</html>

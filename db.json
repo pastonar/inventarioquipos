@@ -1,0 +1,491 @@
+{
+  "estadoPersona": [
+    {
+      "id": 1,
+      "descripcion": "ACTIVOS"
+    },
+    {
+      "id": 2,
+      "descripcion": "INACTIVO"
+    }
+  ],
+  "estadoEquipo": [
+    {
+      "id": 2,
+      "descripcion": "EN CALIBRACION",
+      "disponible": "false"
+    },
+    {
+      "id": 3,
+      "descripcion": "EN MANTENIMIENTO",
+      "disponible": "False"
+    },
+    {
+      "id": 4,
+      "descripcion": "OBSOLETO",
+      "disponible": "true"
+    },
+    {
+      "id": 5,
+      "descripcion": "DADO DE BAJA",
+      "disponible": "False"
+    },
+    {
+      "id": 6,
+      "descripcion": "OPERATIVO",
+      "disponible": "True"
+    },
+    {
+      "id": 7,
+      "descripcion": "NO FUNCIONAL",
+      "disponible": "True"
+    }
+  ],
+  "typeId": [
+    {
+      "id": 1,
+      "title": "CEDULA DE CIUDADANIA"
+    },
+    {
+      "id": 2,
+      "title": "OTRO"
+    },
+    {
+      "id": 3,
+      "title": "VISA"
+    },
+    {
+      "id": 4,
+      "title": "PASAPORTE"
+    },
+    {
+      "id": 5,
+      "title": "CEDULA EXTRANJERIA"
+    }
+  ],
+  "bodegas": [
+    {
+      "id": 1,
+      "descripcion": "las cuadras",
+      "direccion": "cr 23 13 46"
+    },
+    {
+      "id": 2,
+      "descripcion": "el recuerdo1",
+      "direccion": "cll 3 13 45"
+    },
+    {
+      "id": 3,
+      "descripcion": "centro",
+      "direccion": "cr 22c 4 sur 58"
+    }
+  ],
+  "users": [
+    {
+      "tipoid": {
+        "id": 1,
+        "title": "CEDULA DE CIUDADANIA"
+      },
+      "numid": "1247",
+      "nombre": "juan",
+      "id": 1
+    },
+    {
+      "tipoid": {
+        "id": 2,
+        "title": "VISA"
+      },
+      "numid": "1247",
+      "nombre": "pedro",
+      "id": 2
+    },
+    {
+      "tipoid": {
+        "id": 5,
+        "title": "CEDULA DE EXTRANJERIA"
+      },
+      "numid": "9874",
+      "nombre": "julian carvacho",
+      "id": 3
+    },
+    {
+      "tipoid": {
+        "id": 5,
+        "title": "CEDULA DE EXTRANJERIA"
+      },
+      "numid": "9821",
+      "nombre": "luigi",
+      "id": 4
+    }
+  ],
+  "equipos": [
+    {
+      "descripcion": "teodolito",
+      "marca": "toplink",
+      "numserial": "2345fer",
+      "estado": {
+        "id": 6,
+        "descripcion": "OPERATIVO"
+      },
+      "ubicacion": {
+        "id": 1,
+        "descripcion": "las cuadras"
+      },
+      "id": 1
+    },
+    {
+      "descripcion": "brujula",
+      "marca": "hoench",
+      "numserial": "12345",
+      "estado": {
+        "id": 6,
+        "descripcion": "OPERATIVO"
+      },
+      "ubicacion": {
+        "id": 3,
+        "descripcion": "centro"
+      },
+      "id": 2
+    }
+  ],
+  "prestamo": [
+    {
+      "fecprestamo": "12/01/2024",
+      "fecdevolucion": "12/01/2024",
+      "id": 1,
+      "responsable": {
+        "tipoid": {
+          "id": 1,
+          "title": "CEDULA DE CIUDADANIA"
+        },
+        "numid": "1247",
+        "nombre": "juan",
+        "id": 1
+      },
+      "equipo": {
+        "descripcion": "teodolito",
+        "marca": "toplink",
+        "numserial": "ABCD123",
+        "ubicacion": {
+          "id": 3,
+          "descripcion": "centro",
+          "direccion": "cr 22c 4 sur 58"
+        },
+        "estado": {
+          "id": 1,
+          "descripcion": "ACTIVOS"
+        },
+        "fecCalibracion": "12/01/024",
+        "id": 1
+      }
+    },
+    {
+      "fecprestamo": "2024-01-17",
+      "fecdevolucion": "2024-01-17",
+      "responsable": {
+        "tipoid": {
+          "id": 5,
+          "title": "CEDULA DE EXTRANJERIA"
+        },
+        "numid": "9821",
+        "nombre": "luigi",
+        "id": 4
+      },
+      "equipo": {
+        "id": 4,
+        "descripcion": "tesonitrador",
+        "marca": "hoench",
+        "numserial": "2345fer",
+        "estado": {
+          "id": 1,
+          "descripcion": "ACTIVOS"
+        },
+        "ubicacion": {
+          "id": 2,
+          "descripcion": "el recuerdo1"
+        }
+      },
+      "id": 2
+    },
+    {
+      "fecprestamo": "2024-01-15",
+      "fecdevolucion": "2024-01-15",
+      "responsable": {
+        "tipoid": {
+          "id": 5,
+          "title": "CEDULA DE EXTRANJERIA"
+        },
+        "numid": "9874",
+        "nombre": "julian carvacho",
+        "id": 3
+      },
+      "equipo": {
+        "id": 3,
+        "descripcion": "brujula",
+        "marca": "techiem",
+        "numserial": "12345",
+        "estado": {
+          "id": 3,
+          "descripcion": "EN MANTENIMIENTO"
+        },
+        "ubicacion": {
+          "id": 1,
+          "descripcion": "las cuadras"
+        }
+      },
+      "id": 3
+    },
+    {
+      "fecprestamo": "2024-01-18",
+      "fecdevolucion": "2024-01-18",
+      "responsable": {
+        "tipoid": {
+          "id": 2,
+          "title": "VISA"
+        },
+        "numid": "1247",
+        "nombre": "pedro",
+        "id": 2
+      },
+      "equipo": {
+        "id": 3,
+        "descripcion": "brujula",
+        "marca": "techiem",
+        "numserial": "12345",
+        "estado": {
+          "id": 3,
+          "descripcion": "EN MANTENIMIENTO"
+        },
+        "ubicacion": {
+          "id": 1,
+          "descripcion": "las cuadras"
+        }
+      },
+      "id": 6
+    },
+    {
+      "fecprestamo": "",
+      "fecdevolucion": "",
+      "responsable": {
+        "tipoid": {
+          "id": 0,
+          "title": ""
+        },
+        "numid": "",
+        "nombre": "juan",
+        "id": 1
+      },
+      "equipo": {
+        "id": 2,
+        "descripcion": "estacion total",
+        "marca": "heinser",
+        "numserial": "EFGH5678",
+        "estado": {
+          "id": 2,
+          "descripcion": "EN CALIBRACION"
+        },
+        "ubicacion": {
+          "id": 2,
+          "descripcion": "el recuerdo1"
+        }
+      },
+      "id": 9
+    },
+    {
+      "fecprestamo": "2024-01-24",
+      "fecdevolucion": "2024-01-24",
+      "responsable": {
+        "tipoid": {
+          "id": 2,
+          "title": "VISA"
+        },
+        "numid": "1247",
+        "nombre": "pedro",
+        "id": 2
+      },
+      "equipo": {
+        "id": 4,
+        "descripcion": "tesonitrador",
+        "marca": "hoench",
+        "numserial": "2345fer",
+        "estado": {
+          "id": 1,
+          "descripcion": "ACTIVOS"
+        },
+        "ubicacion": {
+          "id": 2,
+          "descripcion": "el recuerdo1"
+        }
+      },
+      "id": 10
+    },
+    {
+      "fecprestamo": "",
+      "fecdevolucion": "",
+      "responsable": {
+        "tipoid": {
+          "id": 2,
+          "title": "VISA"
+        },
+        "numid": "1247",
+        "nombre": "pedro",
+        "id": 2
+      },
+      "equipo": {
+        "id": 3,
+        "descripcion": "brujula",
+        "marca": "techiem",
+        "numserial": "12345",
+        "estado": {
+          "id": 3,
+          "descripcion": "EN MANTENIMIENTO"
+        },
+        "ubicacion": {
+          "id": 1,
+          "descripcion": "las cuadras"
+        }
+      },
+      "id": 11
+    },
+    {
+      "fecprestamo": "",
+      "fecdevolucion": "",
+      "responsable": {
+        "tipoid": {
+          "id": 2,
+          "title": "VISA"
+        },
+        "numid": "1247",
+        "nombre": "pedro",
+        "id": 2
+      },
+      "equipo": {
+        "id": 1,
+        "descripcion": "teodolito",
+        "marca": "toplink",
+        "numserial": "ABCD123",
+        "estado": {
+          "id": 1,
+          "descripcion": "ACTIVOS"
+        },
+        "ubicacion": {
+          "id": 3,
+          "descripcion": "centro"
+        }
+      },
+      "id": 12
+    },
+    {
+      "fecprestamo": "2024-01-19",
+      "fecdevolucion": "2024-01-19",
+      "responsable": {
+        "tipoid": {
+          "id": 1,
+          "title": "CEDULA DE CIUDADANIA"
+        },
+        "numid": "1247",
+        "nombre": "juan",
+        "id": 1
+      },
+      "equipo": {
+        "id": 1,
+        "descripcion": "teodolito",
+        "marca": "toplink",
+        "numserial": "ABCD123",
+        "estado": {
+          "id": 1,
+          "descripcion": "ACTIVOS"
+        },
+        "ubicacion": {
+          "id": 3,
+          "descripcion": "centro"
+        }
+      },
+      "id": 13
+    },
+    {
+      "fecprestamo": "",
+      "fecdevolucion": "",
+      "responsable": {
+        "tipoid": {
+          "id": 2,
+          "title": "VISA"
+        },
+        "numid": "1247",
+        "nombre": "pedro",
+        "id": 2
+      },
+      "equipo": {
+        "id": 0,
+        "descripcion": "-- select un equipo --",
+        "marca": "",
+        "numserial": "",
+        "estado": {
+          "id": 0,
+          "descripcion": ""
+        },
+        "ubicacion": {
+          "id": 0,
+          "descripcion": ""
+        }
+      },
+      "id": 16
+    },
+    {
+      "fecprestamo": "",
+      "fecdevolucion": "",
+      "responsable": {
+        "tipoid": {
+          "id": 1,
+          "title": "CEDULA DE CIUDADANIA"
+        },
+        "numid": "1247",
+        "nombre": "juan",
+        "id": 1
+      },
+      "equipo": {
+        "id": 3,
+        "descripcion": "brujula",
+        "marca": "techiem",
+        "numserial": "12345",
+        "estado": {
+          "id": 3,
+          "descripcion": "EN MANTENIMIENTO"
+        },
+        "ubicacion": {
+          "id": 1,
+          "descripcion": "las cuadras"
+        }
+      },
+      "id": 18
+    },
+    {
+      "fecprestamo": "2024-01-19",
+      "fecdevolucion": "",
+      "responsable": {
+        "tipoid": {
+          "id": 1,
+          "title": "CEDULA DE CIUDADANIA"
+        },
+        "numid": "1247",
+        "nombre": "juan",
+        "id": 1
+      },
+      "equipo": {
+        "id": 1,
+        "descripcion": "teodolito",
+        "marca": "toplink",
+        "numserial": "ABCD123",
+        "estado": {
+          "id": 1,
+          "descripcion": "ACTIVOS"
+        },
+        "ubicacion": {
+          "id": 3,
+          "descripcion": "centro"
+        }
+      },
+      "id": 19
+    }
+  ]
+}
